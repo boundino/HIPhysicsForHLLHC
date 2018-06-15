@@ -1,6 +1,7 @@
 #include "xjjrootuti.h"
 #include "plotRAA.h"
 #include "datapoints/RAA_CMS_Charged_0_100.h"
+#include "datapoints/RAA_CMS_Charged_0_10.h"
 
 Double_t errorD0lowpt = 0.30; // 30%
 Double_t errorsystD0lowpt = 0.137405/0.722896; // lowest pt bin
@@ -162,13 +163,18 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   const int nxCharged = 37;
   Double_t xCharged[nxCharged+1] = {0.4, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 140, 165, 250, 400};
-  TH1D* hRAA_Charged_before = new TH1D("hRAA_Charged_before","",nxCharged,xCharged);
-  TH1D* hRAA_Charged_after = new TH1D("hRAA_Charged_after","",nxCharged,xCharged);
-
-  setbincontentsCharged(hRAA_Charged_before,1.);
-  setbincontentsCharged(hRAA_Charged_after, lumiweightTG_Charged ,lumiweightMB_Charged);
-  TGraphErrors* gRAA_Charged_before = (TGraphErrors*)gRAA_Bp_before->Clone("gRAA_Charged_before");
-  TGraphErrors* gRAA_Charged_after = (TGraphErrors*)gRAA_Bp_after->Clone("gRAA_Charged_after");
+  TH1D* hRAA_Charged_before_cent0100 = new TH1D("hRAA_Charged_before_cent0100","",nxCharged,xCharged);
+  TH1D* hRAA_Charged_after_cent0100 = new TH1D("hRAA_Charged_after_cent0100","",nxCharged,xCharged);
+  TH1D* hRAA_Charged_before_cent010 = new TH1D("hRAA_Charged_before_cent010","",nxCharged,xCharged);
+  TH1D* hRAA_Charged_after_cent010 = new TH1D("hRAA_Charged_after_cent010","",nxCharged,xCharged);
+  RAA_CMS_Charged_0_100::setbincontentsCharged(hRAA_Charged_before_cent0100,1.);
+  RAA_CMS_Charged_0_100::setbincontentsCharged(hRAA_Charged_after_cent0100, lumiweightTG_Charged ,lumiweightMB_Charged);
+  RAA_CMS_Charged_0_10::setbincontentsCharged(hRAA_Charged_before_cent010,1.);
+  RAA_CMS_Charged_0_10::setbincontentsCharged(hRAA_Charged_after_cent010, lumiweightTG_Charged ,lumiweightMB_Charged);
+  TGraphErrors* gRAA_Charged_before_cent0100 = (TGraphErrors*)gRAA_Bp_before->Clone("gRAA_Charged_before_cent0100");
+  TGraphErrors* gRAA_Charged_after_cent0100 = (TGraphErrors*)gRAA_Bp_after->Clone("gRAA_Charged_after_cent0100");
+  TGraphErrors* gRAA_Charged_before_cent010 = (TGraphErrors*)gRAA_Bp_before->Clone("gRAA_Charged_before_cent010");
+  TGraphErrors* gRAA_Charged_after_cent010 = (TGraphErrors*)gRAA_Bp_after->Clone("gRAA_Charged_after_cent010");
   
   // Dsubs
 
@@ -231,8 +237,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   //
 
-  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before, hRAA_Ds_before, gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before);
-  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after, hRAA_Ds_after, gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after);
+  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before_cent0100, hRAA_Ds_before, gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before_cent0100, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before);
+  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after_cent0100, hRAA_Ds_after, gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after_cent0100, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after);
+  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before_cent010, hRAA_Ds_before, gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before_cent010, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before);
+  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after_cent010, hRAA_Ds_after, gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after_cent010, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after);
 
   //
 
@@ -261,6 +269,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::settex(texlumiafter, 0.038, 31);
   TLatex* texcent = new TLatex(0.60, 0.18, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.043);
+  TLatex* texcent010 = new TLatex(0.63, 0.18, Form("Centrality 0-10%s", "%"));
+  xjjroot::settex(texcent010, 0.043);
 
   //
 
@@ -282,8 +292,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(1., 1., trkerr);
-  hRAA_Charged_before->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent0100->Draw("plsame");
   gRAA_D0_before->Draw("5same");
   hRAA_D0_before->Draw("plsame");
   gRAA_Bp_before->Draw("5same");
@@ -300,7 +310,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent->Draw();
   TLegend* legRAAbefore = new TLegend(0.45, 0.71, 0.92, 0.91);
   xjjroot::setleg(legRAAbefore, 0.035);
-  legRAAbefore->AddEntry(gRAA_Charged_before, "Charged hadrons", "pf");
+  legRAAbefore->AddEntry(gRAA_Charged_before_cent0100, "Charged hadrons", "pf");
   legRAAbefore->AddEntry(gRAA_D0_before, "D^{0}", "pf");
   legRAAbefore->AddEntry(gRAA_Bp_before, "B^{+}", "pf");
   legRAAbefore->AddEntry(gRAA_NPJPsi_syst_before, "Non-prompt J/#psi", "pf");
@@ -311,8 +321,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
-  hRAA_Charged_after->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent0100->Draw("plsame");
   gRAA_D0_after->Draw("5same");
   hRAA_D0_after->Draw("plsame");
   gRAA_Bp_after->Draw("5same");
@@ -328,7 +338,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent->Draw();
   TLegend* legRAAafter = new TLegend(0.45, 0.60, 0.92, 0.92);
   xjjroot::setleg(legRAAafter, 0.035);
-  legRAAafter->AddEntry(gRAA_Charged_after, "Charged hadrons", "pf");
+  legRAAafter->AddEntry(gRAA_Charged_after_cent0100, "Charged hadrons", "pf");
   legRAAafter->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} < 50 GeV), %.1f nb^{-1}", lumiMB_after), NULL);
   legRAAafter->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} > 50 GeV), %.0f nb^{-1}", lumiTG_after), NULL);
   legRAAafter->AddEntry(gRAA_D0_after, Form("D^{0} (p#scale[0.6]{#lower[0.6]{T}} < 20 GeV), %.1f nb^{-1}", lumiMB_after), "pf");
@@ -344,8 +354,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(1., 1., trkerr);
-  hRAA_Charged_before->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent0100->Draw("plsame");
   gRAA_D0_before->Draw("5same");
   hRAA_D0_before->Draw("plsame");
   gRAA_Bp_before->Draw("5same");
@@ -367,8 +377,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
-  hRAA_Charged_after->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent0100->Draw("plsame");
   gRAA_D0_after->Draw("5same");
   hRAA_D0_after->Draw("plsame");
   gRAA_Bp_after->Draw("5same");
@@ -395,8 +405,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(1., 1., trkerr);
-  hRAA_Charged_before->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent0100->Draw("plsame");
   gRAA_D0_before->Draw("5same");
   hRAA_D0_before->Draw("plsame");
   gRAA_Bp_before->Draw("5same");
@@ -413,7 +423,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent->Draw();
   TLegend* legRAAbeforev2 = new TLegend(0.45, 0.60, 0.92, 0.92);
   xjjroot::setleg(legRAAbeforev2, 0.035);
-  legRAAbeforev2->AddEntry(gRAA_Charged_before, "Charged hadrons", "pf");
+  legRAAbeforev2->AddEntry(gRAA_Charged_before_cent0100, "Charged hadrons", "pf");
   legRAAbeforev2->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} < 50 GeV), %.2f nb^{-1}", lumiMB_Charged_before), NULL);
   legRAAbeforev2->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} > 50 GeV), %.1f nb^{-1}", lumiTG_Charged_before), NULL);
   legRAAbeforev2->AddEntry(gRAA_D0_before, Form("D^{0} (p#scale[0.6]{#lower[0.6]{T}} < 20 GeV), %.2f nb^{-1}", lumiMB_D0_before), "pf");
@@ -427,8 +437,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
-  hRAA_Charged_after->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent0100->Draw("plsame");
   gRAA_D0_after->Draw("5same");
   hRAA_D0_after->Draw("plsame");
   gRAA_Bp_after->Draw("5same");
@@ -451,8 +461,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(1., 1., trkerr);
-  hRAA_Charged_before->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent0100->Draw("plsame");
   gRAA_D0_before->Draw("5same");
   hRAA_D0_before->Draw("plsame");
   gRAA_Bp_before->Draw("5same");
@@ -474,8 +484,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gPad->SetLogx();
   hempty->Draw();
   line->Draw();
-  drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
-  hRAA_Charged_after->Draw("plsame");
+  RAA_CMS_Charged_0_100::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent0100->Draw("plsame");
   gRAA_D0_after->Draw("5same");
   hRAA_D0_after->Draw("plsame");
   gRAA_Bp_after->Draw("5same");
@@ -492,6 +502,83 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
 
+
+  //
+
+  c2 = new TCanvas("c2v2cent010", "", 1200, 600);
+  c2->Divide(2, 1);
+
+  c2->cd(1);
+  gPad->SetLogx();
+  hempty->Draw();
+  line->Draw();
+  RAA_CMS_Charged_0_10::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent010->Draw("plsame");
+  texcms->Draw();
+  texpre->Draw();
+  texdata->Draw();
+  texsnn->Draw();
+  texlumiv2->Draw();
+  texcent010->Draw();
+  legRAAbeforev2 = new TLegend(0.45, 0.70, 0.92, 0.87);
+  xjjroot::setleg(legRAAbeforev2, 0.035);
+  legRAAbeforev2->AddEntry(gRAA_Charged_before_cent0100, "Charged hadrons", "pf");
+  legRAAbeforev2->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} < 50 GeV), %.2f nb^{-1}", lumiMB_Charged_before), NULL);
+  legRAAbeforev2->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} > 50 GeV), %.1f nb^{-1}", lumiTG_Charged_before), NULL);
+  legRAAbeforev2->Draw();
+
+  c2->cd(2);
+  gPad->SetLogx();
+  hempty->Draw();
+  line->Draw();
+  RAA_CMS_Charged_0_10::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent010->Draw("plsame");
+  texcms->Draw();
+  texpreafter->Draw();
+  texsnn->Draw();
+  texlumiafter->Draw();
+  texcent010->Draw();
+  legRAAafter = new TLegend(0.45, 0.70, 0.92, 0.87);
+  xjjroot::setleg(legRAAafter, 0.035);
+  legRAAafter->AddEntry(gRAA_Charged_after_cent0100, "Charged hadrons", "pf");
+  legRAAafter->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} < 50 GeV), %.1f nb^{-1}", lumiMB_after), NULL);
+  legRAAafter->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} > 50 GeV), %.0f nb^{-1}", lumiTG_after), NULL);
+  legRAAafter->Draw();
+
+  c2->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2.pdf", lumiTG_after, lumiMB_after));
+
+  c1 = new TCanvas("c1v2cent010left", "", 600, 600);
+  gPad->SetLogx();
+  hempty->Draw();
+  line->Draw();
+  RAA_CMS_Charged_0_10::drawsystCharged(1., 1., trkerr);
+  hRAA_Charged_before_cent010->Draw("plsame");
+  TF1* f = new TF1("f", "[0]+[1]*log(x)+[2]*log(x)*log(x)+[3]*log(x)*log(x)*log(x)", 50, 600);
+  hRAA_Charged_before_cent010->Fit("f", "", "qL", 50, 400);
+  hRAA_Charged_before_cent010->Fit("f", "", "qm", 50, 400);
+  f->Draw("same");
+  texcms->Draw();
+  texpre->Draw();
+  texdata->Draw();
+  texsnn->Draw();
+  texlumiv2->Draw();
+  texcent010->Draw();
+  legRAAbeforev2->Draw();
+  c1->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2_left.pdf", lumiTG_after, lumiMB_after));
+
+  c1 = new TCanvas("c1v2cent010right", "", 600, 600);
+  gPad->SetLogx();
+  hempty->Draw();
+  line->Draw();
+  RAA_CMS_Charged_0_10::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hRAA_Charged_after_cent010->Draw("plsame");
+  texcms->Draw();
+  texpreafter->Draw();
+  texsnn->Draw();
+  texlumiafter->Draw();
+  texcent010->Draw();
+  legRAAafter->Draw();
+  c1->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
 
 }
 

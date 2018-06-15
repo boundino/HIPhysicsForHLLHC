@@ -12,6 +12,7 @@
 #include <TStyle.h>
 #include <TMath.h>
 #include <TColor.h>
+#include <TF1.h>
 
 void SetPlotStyle(TH1D* hD0, TH1D* hBp, TH1D* hCharged, TH1D* hDs, TGraphErrors* gD0, TGraphErrors* gBp, TGraphErrors* gCharged, TGraphErrors* gDs, TGraphErrors* gstatNj, TGraphErrors* gsystNj)
 {
