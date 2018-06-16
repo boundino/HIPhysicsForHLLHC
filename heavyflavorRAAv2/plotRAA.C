@@ -552,7 +552,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   legRAAafter->AddEntry((TObject*)0, Form("(p#scale[0.6]{#lower[0.6]{T}} > 50 GeV), %.0f nb^{-1}", lumiTG_after), NULL);
   legRAAafter->Draw();
 
-  c2->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2.pdf", lumiTG_after, lumiMB_after));
+  c2->SaveAs(Form("plots/cRAA_cent05_lumiTG_%.0f_lumiMB_%.0f_v2.pdf", lumiTG_after, lumiMB_after));
 
   c1 = new TCanvas("c1v2cent010left", "", 600, 600);
   gPad->SetLogx();
@@ -576,7 +576,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texlumiv2->Draw();
   texcent010->Draw();
   legRAAbeforev2->Draw();
-  c1->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2_left.pdf", lumiTG_after, lumiMB_after));
+  c1->SaveAs(Form("plots/cRAA_cent05_lumiTG_%.0f_lumiMB_%.0f_v2_left.pdf", lumiTG_after, lumiMB_after));
 
   c1 = new TCanvas("c1v2cent010right", "", 600, 600);
   gPad->SetLogx();
@@ -590,7 +590,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texlumiafter->Draw();
   texcent010->Draw();
   legRAAafter->Draw();
-  c1->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
+  c1->SaveAs(Form("plots/cRAA_cent05_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
 
 
 }
