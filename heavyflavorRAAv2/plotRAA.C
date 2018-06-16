@@ -2,6 +2,7 @@
 #include "plotRAA.h"
 #include "datapoints/RAA_CMS_Charged_0_100.h"
 #include "datapoints/RAA_CMS_Charged_0_10.h"
+#include "datapoints/RAA_CMS_Charged_0_5.h"
 
 Double_t errorD0lowpt = 0.30; // 30%
 Double_t errorsystD0lowpt = 0.137405/0.722896; // lowest pt bin
@@ -163,14 +164,16 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   const int nxCharged = 37;
   Double_t xCharged[nxCharged+1] = {0.4, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 140, 165, 250, 400};
+  const int nxChargedextend = 38;
+  Double_t xChargedextend[nxChargedextend+1] = {0.4, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 3.2, 4, 4.8, 5.6, 6.4, 7.2, 9.6, 12, 14.4, 19.2, 24, 28.8, 35.2, 41.6, 48, 60.8, 73.6, 86.4, 103.6, 120.8, 140, 165, 250, 400, 600};
   TH1D* hRAA_Charged_before_cent0100 = new TH1D("hRAA_Charged_before_cent0100","",nxCharged,xCharged);
   TH1D* hRAA_Charged_after_cent0100 = new TH1D("hRAA_Charged_after_cent0100","",nxCharged,xCharged);
-  TH1D* hRAA_Charged_before_cent010 = new TH1D("hRAA_Charged_before_cent010","",nxCharged,xCharged);
-  TH1D* hRAA_Charged_after_cent010 = new TH1D("hRAA_Charged_after_cent010","",nxCharged,xCharged);
+  TH1D* hRAA_Charged_before_cent010 = new TH1D("hRAA_Charged_before_cent010","",nxChargedextend,xChargedextend);
+  TH1D* hRAA_Charged_after_cent010 = new TH1D("hRAA_Charged_after_cent010","",nxChargedextend,xChargedextend);
   RAA_CMS_Charged_0_100::setbincontentsCharged(hRAA_Charged_before_cent0100,1.);
   RAA_CMS_Charged_0_100::setbincontentsCharged(hRAA_Charged_after_cent0100, lumiweightTG_Charged ,lumiweightMB_Charged);
-  RAA_CMS_Charged_0_10::setbincontentsCharged(hRAA_Charged_before_cent010,1.);
-  RAA_CMS_Charged_0_10::setbincontentsCharged(hRAA_Charged_after_cent010, lumiweightTG_Charged ,lumiweightMB_Charged);
+  RAA_CMS_Charged_0_5::setbincontentsCharged(hRAA_Charged_before_cent010,1.);
+  RAA_CMS_Charged_0_5::setbincontentsCharged(hRAA_Charged_after_cent010, lumiweightTG_Charged ,lumiweightMB_Charged);
   TGraphErrors* gRAA_Charged_before_cent0100 = (TGraphErrors*)gRAA_Bp_before->Clone("gRAA_Charged_before_cent0100");
   TGraphErrors* gRAA_Charged_after_cent0100 = (TGraphErrors*)gRAA_Bp_after->Clone("gRAA_Charged_after_cent0100");
   TGraphErrors* gRAA_Charged_before_cent010 = (TGraphErrors*)gRAA_Bp_before->Clone("gRAA_Charged_before_cent010");
@@ -249,8 +252,12 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   
   TH2F* hempty = new TH2F("hempty", ";p_{T} (GeV);R_{AA}", 50, pti, pte, 10., 0, 1.70);
   xjjroot::sethempty(hempty, -0.1, -0.2, 0.05, 0.04);
+  TH2F* hemptyextend = new TH2F("hemptyextend", ";p_{T} (GeV);R_{AA}", 50, pti, 1000, 10., 0, 1.70);
+  xjjroot::sethempty(hemptyextend, -0.1, -0.2, 0.05, 0.04);
   TLine* line = new TLine(pti, 1, pte, 1);
   xjjroot::setline(line, kBlack, 2, 2);
+  TLine* lineextend = new TLine(pti, 1, 1000, 1);
+  xjjroot::setline(lineextend, kBlack, 2, 2);
   TLatex* texcms = new TLatex(0.16, 0.90, "CMS");
   xjjroot::settex(texcms, 0.06, 13, 62);
   TLatex* texpre = new TLatex(0.15, 0.84, "Performance");
@@ -269,7 +276,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::settex(texlumiafter, 0.038, 31);
   TLatex* texcent = new TLatex(0.60, 0.18, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.043);
-  TLatex* texcent010 = new TLatex(0.63, 0.18, Form("Centrality 0-10%s", "%"));
+  TLatex* texcent010 = new TLatex(0.63, 0.18, Form("Centrality 0-5%s", "%"));
   xjjroot::settex(texcent010, 0.043);
 
   //
@@ -510,9 +517,9 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c2->cd(1);
   gPad->SetLogx();
-  hempty->Draw();
-  line->Draw();
-  RAA_CMS_Charged_0_10::drawsystCharged(1., 1., trkerr);
+  hemptyextend->Draw();
+  lineextend->Draw();
+  RAA_CMS_Charged_0_5::drawsystCharged(1., 1., trkerr);
   hRAA_Charged_before_cent010->Draw("plsame");
   texcms->Draw();
   texpre->Draw();
@@ -529,9 +536,9 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c2->cd(2);
   gPad->SetLogx();
-  hempty->Draw();
-  line->Draw();
-  RAA_CMS_Charged_0_10::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hemptyextend->Draw();
+  lineextend->Draw();
+  RAA_CMS_Charged_0_5::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
   hRAA_Charged_after_cent010->Draw("plsame");
   texcms->Draw();
   texpreafter->Draw();
@@ -549,13 +556,18 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c1 = new TCanvas("c1v2cent010left", "", 600, 600);
   gPad->SetLogx();
-  hempty->Draw();
-  line->Draw();
-  RAA_CMS_Charged_0_10::drawsystCharged(1., 1., trkerr);
+  hemptyextend->Draw();
+  lineextend->Draw();
+  RAA_CMS_Charged_0_5::drawsystCharged(1., 1., trkerr);
   hRAA_Charged_before_cent010->Draw("plsame");
-  TF1* f = new TF1("f", "[0]+[1]*log(x)+[2]*log(x)*log(x)+[3]*log(x)*log(x)*log(x)", 50, 600);
-  hRAA_Charged_before_cent010->Fit("f", "", "qL", 50, 400);
-  hRAA_Charged_before_cent010->Fit("f", "", "qm", 50, 400);
+  TF1* f = new TF1("f", "(1./1820.)*TMath::Exp(10.5491-6.79267*log(x+6.92719))/TMath::Exp(3.77707-6.92871*log(x+3.41343))", 50, 1000);
+  f->SetLineStyle(2);
+  f->SetLineWidth(3);
+  f->SetLineColor(kRed+3);
+  // Float_t smoothx[] = {95, 112.2, 130.4, 152.5, 207.5, 325};
+  // for(int i=0;i<sizeof(smoothx)/sizeof(smoothx[0]);i++) std::cout<<smoothx[i]<<" "<<f->Eval(smoothx[i])<<std::endl;
+  // std::cout<<"500 "<<f->Eval(500)<<std::endl;
+  // std::cout<<"800 "<<f->Eval(800)<<std::endl;
   f->Draw("same");
   texcms->Draw();
   texpre->Draw();
@@ -568,9 +580,9 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c1 = new TCanvas("c1v2cent010right", "", 600, 600);
   gPad->SetLogx();
-  hempty->Draw();
-  line->Draw();
-  RAA_CMS_Charged_0_10::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
+  hemptyextend->Draw();
+  lineextend->Draw();
+  RAA_CMS_Charged_0_5::drawsystCharged(lumiweightTG_Charged, lumiweightMB_Charged, trkerr);
   hRAA_Charged_after_cent010->Draw("plsame");
   texcms->Draw();
   texpreafter->Draw();
@@ -579,6 +591,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent010->Draw();
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_cent010_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
+
 
 }
 
