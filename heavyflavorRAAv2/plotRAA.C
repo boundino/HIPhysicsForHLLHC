@@ -12,11 +12,14 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
              Float_t lumiTG_after, Float_t lumiMB_after)
 {
 
+  Float_t lumiTG_Bs_before = lumiTG_Bp_before;
+
   std::cout<<std::endl;
   std::cout<<"  -------------------- Before --------------------"<<std::endl;
   std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (D0 trigger): "<<std::setw(7)<<lumiTG_D0_before<<" nb-1"<<std::endl;
   std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (D0 MB): "<<std::setw(7)<<lumiMB_D0_before<<" nb-1"<<std::endl;
   std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (B+ trigger): "<<std::setw(7)<<lumiTG_Bp_before<<" nb-1"<<std::endl;
+  std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (Bs trigger): "<<std::setw(7)<<lumiTG_Bs_before<<" nb-1"<<std::endl;
   std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (charged hadron trigger): "<<std::setw(7)<<lumiTG_Charged_before<<" nb-1"<<std::endl;
   std::cout<<std::setiosflags(std::ios::left)<<std::setw(37)<<"   lumi (charged hadron MB): "<<std::setw(7)<<lumiMB_Charged_before<<" nb-1"<<std::endl;
   std::cout<<"  -------------------- after ---------------------"<<std::endl;
@@ -28,6 +31,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   Float_t lumiweightTG_D0 = TMath::Sqrt(lumiTG_after/lumiTG_D0_before);
   Float_t lumiweightMB_D0 = TMath::Sqrt(lumiMB_after/lumiMB_D0_before);
   Float_t lumiweightTG_Bp = TMath::Sqrt(lumiTG_after/lumiTG_Bp_before);
+  Float_t lumiweightTG_Bs = TMath::Sqrt(lumiTG_after/lumiTG_Bs_before);
   Float_t lumiweightTG_NPJpsi = TMath::Sqrt(lumiTG_after/lumiTG_Bp_before);
   Float_t lumiweightMB_Charged = TMath::Sqrt(lumiMB_after/lumiMB_Charged_before);
   Float_t lumiweightTG_Charged = TMath::Sqrt(lumiTG_after/lumiTG_Charged_before);
@@ -127,6 +131,39 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gRAA_Bp_before->SetName("gRAA_Bp_before");
   TGraphErrors* gRAA_Bp_after = new TGraphErrors(nxBp,axBp,ayBpafter,exBp,eyBpafter);
   gRAA_Bp_after->SetName("gRAA_Bp_after");
+
+  // Bsubs
+
+  const int nxBs = 3;
+  Double_t xBs[nxBs+1] = {7.0,15.0,20.0,50.0};
+  TH1D* hRAA_Bs_before = new TH1D("hRAA_Bs_before","",nxBs,xBs);
+  TH1D* hRAA_Bs_after = new TH1D("hRAA_Bs_after","",nxBs,xBs);
+  Double_t axBs[nxBs],exBs[nxBs],ayBsbefore[nxBs],eyBsbefore[nxBs],ayBsafter[nxBs],eyBsafter[nxBs];
+  std::ifstream getBs("datapoints/RAA_CMS_Bs_0_100_theorycenter.dat");
+  for(int i=0;i<nxBs;i++)
+    {
+      Double_t centervalue,staterror,systerror,tem;
+      Float_t errminimum = trkerr*4;
+      getBs>>tem>>tem>>tem>>centervalue>>staterror>>systerror;
+      hRAA_Bs_before->SetBinContent(i+1,centervalue);
+      hRAA_Bs_after->SetBinContent(i+1,centervalue);
+      axBs[i] = (xBs[i+1]+xBs[i])/2.;
+      // exBs[i] = (xBs[i+1]-xBs[i])/2.;
+      exBs[i] = axBs[i]*0.08;
+      ayBsbefore[i] = centervalue;
+      ayBsafter[i] = centervalue;
+
+      hRAA_Bs_before->SetBinError(i+1,staterror);
+      hRAA_Bs_after->SetBinError(i+1,staterror/lumiweightTG_Bs);
+      eyBsbefore[i] = systerror;
+      eyBsafter[i] = (systerror/lumiweightTG_Bs)>(errminimum*ayBsafter[i])?(systerror/lumiweightTG_Bs):(errminimum*ayBsafter[i]);
+    }
+  getBs.close();
+  getBs.clear();
+  TGraphErrors* gRAA_Bs_before = new TGraphErrors(nxBs,axBs,ayBsbefore,exBs,eyBsbefore);
+  gRAA_Bs_before->SetName("gRAA_Bs_before");
+  TGraphErrors* gRAA_Bs_after = new TGraphErrors(nxBs,axBs,ayBsafter,exBs,eyBsafter);
+  gRAA_Bs_after->SetName("gRAA_Bs_after");
 
   // NPJpsi
 
@@ -240,10 +277,13 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   //
 
-  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before_cent0100, hRAA_Ds_before, gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before_cent0100, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before);
-  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after_cent0100, hRAA_Ds_after, gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after_cent0100, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after);
-  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before_cent010, hRAA_Ds_before, gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before_cent010, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before);
-  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after_cent010, hRAA_Ds_after, gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after_cent010, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after);
+  SetPlotStyle(hRAA_D0_before, hRAA_Bp_before, hRAA_Charged_before_cent0100, hRAA_Ds_before, hRAA_Bs_before,
+               gRAA_D0_before, gRAA_Bp_before, gRAA_Charged_before_cent0100, gRAA_Ds_before, gRAA_NPJPsi_stat_before, gRAA_NPJPsi_syst_before, gRAA_Bs_before);
+  SetPlotStyle(hRAA_D0_after, hRAA_Bp_after, hRAA_Charged_after_cent0100, hRAA_Ds_after, hRAA_Bs_after,
+               gRAA_D0_after, gRAA_Bp_after, gRAA_Charged_after_cent0100, gRAA_Ds_after, gRAA_NPJPsi_stat_after, gRAA_NPJPsi_syst_after, gRAA_Bs_after);
+
+  SetPlotStyle(0, 0, hRAA_Charged_before_cent010, 0, 0, 0, 0, gRAA_Charged_before_cent010, 0, 0, 0, 0);
+  SetPlotStyle(0, 0, hRAA_Charged_after_cent010, 0, 0, 0, 0, gRAA_Charged_after_cent010, 0, 0, 0, 0);
 
   //
 
@@ -357,6 +397,23 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1.pdf", lumiTG_after, lumiMB_after));
 
+  c2->cd(1);
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  TLegend* legBsbefore = new TLegend(0.45, 0.66, 0.92, 0.71);
+  xjjroot::setleg(legBsbefore, 0.035);
+  legBsbefore->AddEntry(gRAA_Bs_before, "B_{s}", "pf");
+  legBsbefore->Draw();
+  c2->cd(2);
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  TLegend* legBsafter = new TLegend(0.15, 0.648, 0.57, 0.69);
+  xjjroot::setleg(legBsafter, 0.035);
+  legBsafter->AddEntry(gRAA_Bs_after, Form("B_{s}, %.0f nb^{-1}", lumiTG_after), "pf");
+  legBsafter->Draw();
+
+  c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_addBs.pdf", lumiTG_after, lumiMB_after));
+
   c1 = new TCanvas("c1left", "", 600, 600);
   gPad->SetLogx();
   hempty->Draw();
@@ -380,6 +437,11 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   legRAAbefore->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_left.pdf", lumiTG_after, lumiMB_after));
 
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  legBsbefore->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_addBs_left.pdf", lumiTG_after, lumiMB_after));
+
   c1 = new TCanvas("c1right", "", 600, 600);
   gPad->SetLogx();
   hempty->Draw();
@@ -401,6 +463,11 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent->Draw();
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_right.pdf", lumiTG_after, lumiMB_after));
+
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  legBsafter->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_addBs_right.pdf", lumiTG_after, lumiMB_after));
 
 
   //
@@ -463,6 +530,18 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
 
   c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2.pdf", lumiTG_after, lumiMB_after));
 
+  c2->cd(1);
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  TLegend* legBsbeforev2 = new TLegend(0.15, 0.648, 0.57, 0.69);
+  xjjroot::setleg(legBsbeforev2, 0.035);
+  legBsbeforev2->AddEntry(gRAA_Bs_before, Form("B_{s}, %.0f nb^{-1}", lumiTG_Bs_before), "pf");
+  legBsbeforev2->Draw();
+  c2->cd(2);
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  legBsafter->Draw();
+  c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_addBs.pdf", lumiTG_after, lumiMB_after));
 
   c1 = new TCanvas("c1v2left", "", 600, 600);
   gPad->SetLogx();
@@ -487,6 +566,11 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   legRAAbeforev2->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_left.pdf", lumiTG_after, lumiMB_after));
 
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  legBsbeforev2->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_addBs_left.pdf", lumiTG_after, lumiMB_after));
+
   c1 = new TCanvas("c1v2right", "", 600, 600);
   gPad->SetLogx();
   hempty->Draw();
@@ -509,6 +593,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
 
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  legBsafter->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_addBs_right.pdf", lumiTG_after, lumiMB_after));
 
   //
 
