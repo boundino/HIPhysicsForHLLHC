@@ -1,7 +1,6 @@
 #include "xjjrootuti.h"
 #include "plotRAA.h"
 #include "datapoints/RAA_CMS_Charged_0_100.h"
-#include "datapoints/RAA_CMS_Charged_0_10.h"
 #include "datapoints/RAA_CMS_Charged_0_5.h"
 
 Double_t errorD0lowpt = 0.30; // 30%
@@ -294,10 +293,14 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::sethempty(hempty, -0.1, -0.2, 0.05, 0.04);
   TH2F* hemptyextend = new TH2F("hemptyextend", ";p_{T} (GeV);R_{AA}", 50, pti, 1000, 10., 0, 1.70);
   xjjroot::sethempty(hemptyextend, -0.1, -0.2, 0.05, 0.04);
+  TH2F* hemptybonly = new TH2F("hemptybonly", ";p_{T} (GeV);R_{AA}", 50, 2, 100, 10., 0, 1.70);
+  xjjroot::sethempty(hemptybonly, -0.1, -0.2, 0.05, 0.04);
   TLine* line = new TLine(pti, 1, pte, 1);
   xjjroot::setline(line, kBlack, 2, 2);
   TLine* lineextend = new TLine(pti, 1, 1000, 1);
   xjjroot::setline(lineextend, kBlack, 2, 2);
+  TLine* linebonly = new TLine(2, 1, 100, 1);
+  xjjroot::setline(linebonly, kBlack, 2, 2);
   TLatex* texcms = new TLatex(0.16, 0.90, "CMS");
   xjjroot::settex(texcms, 0.06, 13, 62);
   TLatex* texpre = new TLatex(0.15, 0.84, "Performance");
@@ -310,6 +313,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::settex(texsnn, 0.038);
   TLatex* texlumi = new TLatex(0.965, 0.945, "pp 27.4 pb^{-1} + PbPb 0.4 nb^{-1}");
   xjjroot::settex(texlumi, 0.038, 31);
+  TLatex* texlumibonly = new TLatex(0.965, 0.945, "pp 27.4 pb^{-1} + PbPb 0.35 nb^{-1}");
+  xjjroot::settex(texlumibonly, 0.038, 31);
   TLatex* texlumiv2 = new TLatex(0.965, 0.945, "pp 27.4 pb^{-1} + PbPb");
   xjjroot::settex(texlumiv2, 0.038, 31);
   TLatex* texlumiafter = new TLatex(0.965, 0.945, "pp + PbPb");
@@ -535,7 +540,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   hRAA_Bs_before->Draw("plsame");
   TLegend* legBsbeforev2 = new TLegend(0.15, 0.648, 0.57, 0.69);
   xjjroot::setleg(legBsbeforev2, 0.035);
-  legBsbeforev2->AddEntry(gRAA_Bs_before, Form("B_{s}, %.0f nb^{-1}", lumiTG_Bs_before), "pf");
+  legBsbeforev2->AddEntry(gRAA_Bs_before, Form("B_{s}, %.2f nb^{-1}", lumiTG_Bs_before), "pf");
   legBsbeforev2->Draw();
   c2->cd(2);
   gRAA_Bs_after->Draw("2same");
@@ -597,6 +602,95 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   hRAA_Bs_after->Draw("plsame");
   legBsafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_addBs_right.pdf", lumiTG_after, lumiMB_after));
+
+  // b only
+
+  c2 = new TCanvas("c2bonly", "", 1200, 600);
+  c2->Divide(2, 1);
+
+  c2->cd(1);
+  gPad->SetLogx();
+  hemptybonly->Draw();
+  linebonly->Draw();
+  gRAA_Bp_before->Draw("5same");
+  hRAA_Bp_before->Draw("plsame");
+  gRAA_NPJPsi_syst_before->Draw("2same");
+  gRAA_NPJPsi_stat_before->Draw("psame");
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  texcms->Draw();
+  texpre->Draw();
+  texdata->Draw();
+  texsnn->Draw();
+  texlumibonly->Draw();
+  texcent->Draw();
+  TLegend* legBonlybefore = new TLegend(0.45, 0.71, 0.92, 0.91);
+  xjjroot::setleg(legBonlybefore, 0.035);
+  legBonlybefore->AddEntry(gRAA_Bp_before, "B^{+}", "pf");
+  legBonlybefore->AddEntry(gRAA_NPJPsi_syst_before, "Non-prompt J/#psi", "pf");
+  legBonlybefore->AddEntry(gRAA_Bs_before, "B_{s}", "pf");
+  legBonlybefore->Draw();
+
+  c2->cd(2);
+  gPad->SetLogx();
+  hemptybonly->Draw();
+  linebonly->Draw();
+  gRAA_Bp_after->Draw("5same");
+  hRAA_Bp_after->Draw("plsame");
+  gRAA_NPJPsi_syst_after->Draw("2same");
+  gRAA_NPJPsi_stat_after->Draw("psame");
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  texcms->Draw();
+  texpreafter->Draw();
+  texsnn->Draw();
+  texlumiafter->Draw();
+  texcent->Draw();
+  TLegend* legBonlyafter = new TLegend(0.45, 0.71, 0.92, 0.91);
+  xjjroot::setleg(legBonlyafter, 0.035);
+  legBonlyafter->AddEntry(gRAA_Bp_after, Form("B^{+}, %.0f nb^{-1}", lumiTG_after), "pf");
+  legBonlyafter->AddEntry(gRAA_NPJPsi_syst_after, Form("Non-prompt J/#psi, %.0f nb^{-1}", lumiTG_after), "pf");
+  legBonlyafter->AddEntry(gRAA_Bs_after, Form("B_{s}, %.0f nb^{-1}", lumiTG_after), "pf");
+  legBonlyafter->Draw();
+
+  c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_bOnly.pdf", lumiTG_after, lumiMB_after));
+
+  c1 = new TCanvas("c1bonlyleft", "", 600, 600);
+  gPad->SetLogx();
+  hemptybonly->Draw();
+  linebonly->Draw();
+  gRAA_Bp_before->Draw("5same");
+  hRAA_Bp_before->Draw("plsame");
+  gRAA_NPJPsi_syst_before->Draw("2same");
+  gRAA_NPJPsi_stat_before->Draw("psame");
+  gRAA_Bs_before->Draw("2same");
+  hRAA_Bs_before->Draw("plsame");
+  texcms->Draw();
+  texpre->Draw();
+  texdata->Draw();
+  texsnn->Draw();
+  texlumi->Draw();
+  texcent->Draw();
+  legBonlybefore->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_bOnly_left.pdf", lumiTG_after, lumiMB_after));
+
+  c1 = new TCanvas("c1bonlyright", "", 600, 600);
+  gPad->SetLogx();
+  hemptybonly->Draw();
+  linebonly->Draw();
+  gRAA_Bp_after->Draw("5same");
+  hRAA_Bp_after->Draw("plsame");
+  gRAA_NPJPsi_syst_after->Draw("2same");
+  gRAA_NPJPsi_stat_after->Draw("psame");
+  gRAA_Bs_after->Draw("2same");
+  hRAA_Bs_after->Draw("plsame");
+  texcms->Draw();
+  texpreafter->Draw();
+  texsnn->Draw();
+  texlumiafter->Draw();
+  texcent->Draw();
+  legBonlyafter->Draw();
+  c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_bOnly_right.pdf", lumiTG_after, lumiMB_after));
 
   //
 
