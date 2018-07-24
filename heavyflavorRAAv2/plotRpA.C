@@ -151,7 +151,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
   xjjroot::settex(texlumiafter, 0.045, 31);
   TLatex* texcent = new TLatex(0.60, 0.20, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.055);
-  TLatex* texrap = new TLatex(0.57, 0.85, "|y_{lab}| < 2.4");
+  TLatex* texrap = new TLatex(0.57, 0.72, "|y_{lab}| < 2.4");
   xjjroot::settex(texrap, 0.055);
 
   //
@@ -172,7 +172,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   c3->cd(1);
   hempty->Draw();
-  TLegend* legRpABp = new TLegend(0.55, 0.68, 0.92, 0.80);
+  TLegend* legRpABp = new TLegend(0.55, 0.77, 0.92, 0.89);
   xjjroot::setleg(legRpABp, 0.055);
   legRpABp->AddEntry(hRpA_Bp_before, "B^{+}", "p");
   legRpABp->AddEntry(gRpA_Bp_before, "Syst.", "f");
@@ -182,7 +182,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   c3->cd(2);
   hempty->Draw();
-  TLegend* legRpAB0 = new TLegend(0.55, 0.68, 0.92, 0.80);
+  TLegend* legRpAB0 = new TLegend(0.55, 0.77, 0.92, 0.89);
   xjjroot::setleg(legRpAB0, 0.055);
   legRpAB0->AddEntry(hRpA_B0_before, "B^{0}", "p");
   legRpAB0->AddEntry(gRpA_B0_before, "Syst.", "f");
@@ -192,7 +192,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   c3->cd(3);
   hempty->Draw();
-  TLegend* legRpABs = new TLegend(0.55, 0.68, 0.92, 0.80);
+  TLegend* legRpABs = new TLegend(0.55, 0.77, 0.92, 0.89);
   xjjroot::setleg(legRpABs, 0.055);
   legRpABs->AddEntry(hRpA_Bs_before, "B^{0}_{s}", "p");
   legRpABs->AddEntry(gRpA_Bs_before, "Syst.", "f");
@@ -242,8 +242,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
       c3->cd(i+1);
       line->Draw();
       texcms->Draw();
-      texpre->Draw();
-      texdata->Draw();
+      texpreafter->Draw();
       texlumiafter->Draw();
       // texcent->Draw();
       texrap->Draw();
