@@ -23,8 +23,9 @@ void SetPlotStyle(TH1D* hBp,
       gBp->SetMarkerSize(1.2);
       gBp->SetMarkerColor(kBlack);
       gBp->SetFillColor(5);
-      // gBp->SetFillColorAlpha(kAzure+7, 0.5);
-      gBp->SetLineColor(kBlack);
+      gBp->SetLineColor(kAzure-4);
+      // gBp->SetLineColor(kBlack);
+      gBp->SetLineStyle(1);
       gBp->SetLineWidth(2);
       hBp->SetMarkerStyle(21);
       hBp->SetMarkerSize(1.2);

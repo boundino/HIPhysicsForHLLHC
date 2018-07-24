@@ -22,8 +22,8 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   // Bp
 
-  const int nxBp = 6;
-  Double_t xBp[nxBp+1] = {10., 15., 20., 25. ,30., 40., 60.};
+  const int nxBp = 8;
+  Double_t xBp[nxBp+1] = {10., 15., 20., 25. ,30., 35., 40., 50., 60.};
   TH1D* hRpA_Bp_before = new TH1D("hRpA_Bp_before","",nxBp,xBp);
   TH1D* hRpA_Bp_after = new TH1D("hRpA_Bp_after","",nxBp,xBp);
   Double_t axBp[nxBp],exBp[nxBp],ayBpbefore[nxBp],eyBpbefore[nxBp],ayBpafter[nxBp],eyBpafter[nxBp];
@@ -55,8 +55,8 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   // B0
 
-  const int nxB0 = 4;
-  Double_t xB0[nxB0+1] = {10., 15., 20., 30., 60.};
+  const int nxB0 = 8;
+  Double_t xB0[nxB0+1] = {10., 15., 20., 25., 30., 35., 40., 50., 60.};
   TH1D* hRpA_B0_before = new TH1D("hRpA_B0_before","",nxB0,xB0);
   TH1D* hRpA_B0_after = new TH1D("hRpA_B0_after","",nxB0,xB0);
   Double_t axB0[nxB0],exB0[nxB0],ayB0before[nxB0],eyB0before[nxB0],ayB0after[nxB0],eyB0after[nxB0];
@@ -88,8 +88,8 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   // Bs
 
-  const int nxBs = 2;
-  Double_t xBs[nxBs+1] = {10., 20., 60.};
+  const int nxBs = 6;
+  Double_t xBs[nxBs+1] = {10., 15., 20., 25., 30., 40., 60.};
   TH1D* hRpA_Bs_before = new TH1D("hRpA_Bs_before","",nxBs,xBs);
   TH1D* hRpA_Bs_after = new TH1D("hRpA_Bs_after","",nxBs,xBs);
   Double_t axBs[nxBs],exBs[nxBs],ayBsbefore[nxBs],eyBsbefore[nxBs],ayBsafter[nxBs],eyBsafter[nxBs];
@@ -147,7 +147,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
   xjjroot::settex(texdata, 0.05, 13);
   TLatex* texlumi = new TLatex(0.965, 0.945, "34.6 nb^{-1} (pPb 5.02 TeV)");
   xjjroot::settex(texlumi, 0.045, 31);
-  TLatex* texlumiafter = new TLatex(0.965, 0.945, "160 nb^{-1} (pPb 5.02 TeV)");
+  TLatex* texlumiafter = new TLatex(0.965, 0.945, "2 pb^{-1} (pPb 5.02 TeV)");
   xjjroot::settex(texlumiafter, 0.045, 31);
   TLatex* texcent = new TLatex(0.60, 0.20, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.055);

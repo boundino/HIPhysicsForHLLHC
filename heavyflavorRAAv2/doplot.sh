@@ -23,7 +23,7 @@ LUMIPbPbMB_D0V2_before=0.1115 # including 151MB centrality trigger events ((151/
 
 LUMIPPbefore=27.4 # pb-1
 LUMIPPbTG_Bp_before=34.6 # nb-1
-LUMIPPbTGafter=160 # nb-1
+LUMIPPbTGafter=2000 # nb-1
 #
 
 FOLDERS=("plots")
