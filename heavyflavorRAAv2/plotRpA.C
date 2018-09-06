@@ -1,5 +1,6 @@
 #include "xjjrootuti.h"
 #include "plotRpA.h"
+#include "plotRpATheory.h"
 
 Double_t errorD0lowpt = 0.30; // 30%
 Double_t errorsystD0lowpt = 0.137405/0.722896; // lowest pt bin
@@ -151,7 +152,7 @@ void plotRpA(Float_t lumiTG_Bp_before,
   xjjroot::settex(texlumiafter, 0.045, 31);
   TLatex* texcent = new TLatex(0.60, 0.20, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.055);
-  TLatex* texrap = new TLatex(0.57, 0.72, "|y_{lab}| < 2.4");
+  TLatex* texrap = new TLatex(0.67, 0.72, "|y_{lab}| < 2.4");
   xjjroot::settex(texrap, 0.055);
 
   //
@@ -172,38 +173,43 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   c3->cd(1);
   hempty->Draw();
-  TLegend* legRpABp = new TLegend(0.55, 0.77, 0.92, 0.89);
+  line->Draw();
+  TLegend* legRpABp = new TLegend(0.65, 0.77, 0.95, 0.89);
   xjjroot::setleg(legRpABp, 0.055);
   legRpABp->AddEntry(hRpA_Bp_before, "B^{+}", "p");
   legRpABp->AddEntry(gRpA_Bp_before, "Syst.", "f");
   gRpA_Bp_before->Draw("5same");
   hRpA_Bp_before->Draw("plsame");
+  drawPOWLANG();
   legRpABp->Draw();
 
   c3->cd(2);
   hempty->Draw();
-  TLegend* legRpAB0 = new TLegend(0.55, 0.77, 0.92, 0.89);
+  line->Draw();
+  TLegend* legRpAB0 = new TLegend(0.65, 0.77, 0.95, 0.89);
   xjjroot::setleg(legRpAB0, 0.055);
   legRpAB0->AddEntry(hRpA_B0_before, "B^{0}", "p");
   legRpAB0->AddEntry(gRpA_B0_before, "Syst.", "f");
   gRpA_B0_before->Draw("5same");
   hRpA_B0_before->Draw("plsame");
+  drawPOWLANG();
   legRpAB0->Draw();
 
   c3->cd(3);
   hempty->Draw();
-  TLegend* legRpABs = new TLegend(0.55, 0.77, 0.92, 0.89);
+  line->Draw();
+  TLegend* legRpABs = new TLegend(0.65, 0.77, 0.95, 0.89);
   xjjroot::setleg(legRpABs, 0.055);
   legRpABs->AddEntry(hRpA_Bs_before, "B^{0}_{s}", "p");
   legRpABs->AddEntry(gRpA_Bs_before, "Syst.", "f");
   gRpA_Bs_before->Draw("5same");
   hRpA_Bs_before->Draw("plsame");
+  drawPOWLANG();
   legRpABs->Draw();
 
   for(int i=0;i<3;i++)
     {
       c3->cd(i+1);
-      line->Draw();
       texcms->Draw();
       texpre->Draw();
       texdata->Draw();
@@ -221,26 +227,31 @@ void plotRpA(Float_t lumiTG_Bp_before,
 
   c3->cd(1);
   hempty->Draw();
+  line->Draw();
   gRpA_Bp_after->Draw("5same");
   hRpA_Bp_after->Draw("plsame");
+  drawPOWLANG();
   legRpABp->Draw();
 
   c3->cd(2);
   hempty->Draw();
+  line->Draw();
   gRpA_B0_after->Draw("5same");
   hRpA_B0_after->Draw("plsame");
+  drawPOWLANG();
   legRpAB0->Draw();
 
   c3->cd(3);
   hempty->Draw();
+  line->Draw();
   gRpA_Bs_after->Draw("5same");
   hRpA_Bs_after->Draw("plsame");
+  drawPOWLANG();
   legRpABs->Draw();
 
   for(int i=0;i<3;i++)
     {
       c3->cd(i+1);
-      line->Draw();
       texcms->Draw();
       texpreafter->Draw();
       texlumiafter->Draw();
