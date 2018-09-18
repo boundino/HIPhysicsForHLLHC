@@ -1,3 +1,6 @@
+#ifndef _DRAWTHEORY_V2_H_
+#define _DRAWTHEORY_V2_H_
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -19,6 +22,7 @@ namespace xjjroot
 {
   void drawtex(Double_t x, Double_t y, const char *text, Float_t tsize=0.04, Short_t align=12, Style_t font=42);
   void drawline(Double_t x1, Double_t y1, Double_t x2, Double_t y2, Color_t lcolor=kBlack, Style_t lstyle=1, Width_t lwidth=2);
+  template <class T> void setthgrstyle(T* h, Color_t mcolor=-1, Style_t mstyle=-1, Size_t msize=-1, Color_t lcolor=-1, Style_t lstyle=-1, Width_t lwidth=-1, Color_t fcolor=-1, Float_t falpha=-1, Style_t fstyle=-1);
 }
 #endif
 
@@ -40,71 +44,55 @@ namespace drawTheoryV2
 
   TGraph* fillalicecurve(TString datfile);
 
-  void drawTheory3050()
+  void setupTheory3050()
   {
-    gStyle->SetHatchesLineWidth(2);
     // PHSD
     TFile* inputPHSD = new TFile("TheoryPredictions/PHSD_v2v3_interpolation_from0p5.root");
     gv2Dmeson5TeV_PHSD = (TGraph*)inputPHSD->Get("gv2Dmeson5TeV_PHSD_cent30to50");
-    gv2Dmeson5TeV_PHSD->SetLineColor(kAzure-6);
-    gv2Dmeson5TeV_PHSD->SetLineWidth(4);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_PHSD, -1, -1, -1, kAzure-6, 1, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_PHSD"<<std::endl;
     // SUBATECH
     gv2Dmeson5TeV_SUBATECH = new TGraph("TheoryPredictions/5TeV30-50v2D_CMS.dat");
     gv2Dmeson5TeV_SUBATECH->SetName("gv2Dmeson5TeV_SUBATECH_cent30to50");
-    gv2Dmeson5TeV_SUBATECH->SetLineStyle(8);
-    gv2Dmeson5TeV_SUBATECH->SetLineColor(kMagenta-2);
-    gv2Dmeson5TeV_SUBATECH->SetLineWidth(4);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_SUBATECH, -1, -1, -1, kMagenta-2, 8, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_SUBATECH"<<std::endl;
     // LBT
     gv2Dmeson5TeV_LBT = new TGraph("TheoryPredictions/v2_cen-30-50.dat");
     gv2Dmeson5TeV_LBT->SetName("gv2Dmeson5TeV_LBT_cent30to50");
-    gv2Dmeson5TeV_LBT->SetLineWidth(4);
-    gv2Dmeson5TeV_LBT->SetLineColor(kRed+1);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_LBT, -1, -1, -1, kRed+1, 1, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_LBT"<<std::endl;
     // TAMU
     TFile* inputTAMU = new TFile("TheoryPredictions/PredictionsTAMU_Dv2_pt.root");
     gv2Dmeson5TeV_TAMU = (TGraphAsymmErrors*)inputTAMU->Get("gv2Dmeson5TeV_TAMU_cent30to50");
-    gv2Dmeson5TeV_TAMU->SetLineColor(kOrange+8);
-    gv2Dmeson5TeV_TAMU->SetFillColor(kOrange+8);
-    gv2Dmeson5TeV_TAMU->SetFillStyle(1001);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_TAMU, -1, -1, -1, kOrange+8, 1, 1, kOrange+8, -1, 1001);
     std::cout<<"--- Read... gv2Dmeson5TeV_TAMU"<<std::endl;
     // CUJET3
     TFile* inputCUJET3 = new TFile("TheoryPredictions/CUJET_v2.root");
     gv2Dmeson5TeV_CUJET3 = (TGraphErrors*)inputCUJET3->Get("gv2Dmeson5TeV_CUJET_cent30to50");
-    gv2Dmeson5TeV_CUJET3->SetLineWidth(1);
-    gv2Dmeson5TeV_CUJET3->SetLineColor(0);
-    gv2Dmeson5TeV_CUJET3->SetFillColor(kAzure-2);
-    gv2Dmeson5TeV_CUJET3->SetFillColorAlpha(kAzure-2, 0.6);
-    gv2Dmeson5TeV_CUJET3->SetFillStyle(3481);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_CUJET3, -1, -1, -1, 0, 0, 0, kAzure-2, 0.6, 3481);
     std::cout<<"--- Read... gv2Dmeson5TeV_CUJET3"<<std::endl;
     // BAMPS
     gv2Dmeson5TeV_BAMPS = fillalicecurve("TheoryPredictions/v2_BAMPS.dat");
-    gv2Dmeson5TeV_BAMPS->SetLineStyle(3);
-    gv2Dmeson5TeV_BAMPS->SetLineColor(kGreen+4);
-    gv2Dmeson5TeV_BAMPS->SetLineWidth(4);    
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_BAMPS, -1, -1, -1, kGreen+4, 3, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_BAMPS"<<std::endl;
     // BAMPSrad
     gv2Dmeson5TeV_BAMPSrad = fillalicecurve("TheoryPredictions/v2_BAMPSrad.dat");
-    gv2Dmeson5TeV_BAMPSrad->SetLineStyle(3);
-    gv2Dmeson5TeV_BAMPSrad->SetLineColor(kSpring+5);
-    gv2Dmeson5TeV_BAMPSrad->SetLineWidth(4);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_BAMPSrad, -1, -1, -1, kSpring+5, 3, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_BAMPSrad"<<std::endl;
     // POWLANG
     gv2Dmeson5TeV_POWLANG = fillalicecurve("TheoryPredictions/v2_POWLANG.dat");
-    gv2Dmeson5TeV_POWLANG->SetLineStyle(10);
-    gv2Dmeson5TeV_POWLANG->SetLineColor(kMagenta-7);
-    gv2Dmeson5TeV_POWLANG->SetLineWidth(4);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_POWLANG, -1, -1, -1, kMagenta-7, 10, 4);
     std::cout<<"--- Read... gv2Dmeson5TeV_POWLANG"<<std::endl;
     // EPOS
     gv2Dmeson5TeV_EPOS = new TGraph("TheoryPredictions/v2_EPOS.dat");
     gv2Dmeson5TeV_EPOS->SetName("gv2Dmeson5TeV_EPOS_cent30to50");
-    gv2Dmeson5TeV_EPOS->SetLineColor(kAzure+5);
-    gv2Dmeson5TeV_EPOS->SetLineWidth(1);
-    gv2Dmeson5TeV_EPOS->SetLineColor(kAzure+5);
-    gv2Dmeson5TeV_EPOS->SetFillColor(kAzure+5);
-    gv2Dmeson5TeV_EPOS->SetFillStyle(3345);
+    xjjroot::setthgrstyle(gv2Dmeson5TeV_EPOS, -1, -1, -1, kAzure+5, 1, 1, kAzure+5, -1, 3345);
     std::cout<<"--- Read... gv2Dmeson5TeV_EPOS"<<std::endl;
+  }
+
+  void drawTheory3050()
+  {
+    gStyle->SetHatchesLineWidth(2);
 
     gv2Dmeson5TeV_TAMU->Draw("4 same");
     gv2Dmeson5TeV_CUJET3->Draw("4 same");
@@ -115,8 +103,10 @@ namespace drawTheoryV2
     gv2Dmeson5TeV_LBT->Draw("c same");
     gv2Dmeson5TeV_BAMPS->Draw("l same");
     gv2Dmeson5TeV_BAMPSrad->Draw("l same");
-    gv2Dmeson5TeV_POWLANG->Draw("l same");
+    gv2Dmeson5TeV_POWLANG->Draw("l same");    
   }
+
+  void setupNdrawTheory3050() { setupTheory3050(); drawTheory3050(); }
 
   // Draw
   void drawcanvas()
@@ -180,7 +170,6 @@ namespace drawTheoryV2
     legV2->AddEntry(gv2Dmeson5TeV_SUBATECH, "SUBATECH", "l");
     legV2->AddEntry(gv2Dmeson5TeV_CUJET3, "CUJET 3.0", "f");
     legV2->AddEntry(gv2Dmeson5TeV_TAMU, "TAMU", "f");
-    // legV2->AddEntry((TObject*)0, "", NULL);
     legV2p->AddEntry(gv2Dmeson5TeV_BAMPSrad, "BAMPS el.+rad.", "l");
     legV2p->AddEntry(gv2Dmeson5TeV_POWLANG, "POWLANG HLT", "l");
     legV2p->AddEntry(gv2Dmeson5TeV_BAMPS, "BAMPS el.", "l");
@@ -232,5 +221,20 @@ void xjjroot::drawline(Double_t x1, Double_t y1, Double_t x2, Double_t y2, Color
   l->SetLineWidth(lwidth);
   l->Draw();
 }
+
+template <class T>
+void xjjroot::setthgrstyle(T* h, Color_t mcolor/*=-1*/, Style_t mstyle/*=-1*/, Size_t msize/*=-1*/, Color_t lcolor/*=-1*/, Style_t lstyle/*=-1*/, Width_t lwidth/*=-1*/, Color_t fcolor/*=-1*/, Float_t falpha/*=-1*/, Style_t fstyle/*=-1*/)
+{
+  if(mcolor>=0) h->SetMarkerColor(mcolor);
+  if(mstyle>=0) h->SetMarkerStyle(mstyle);
+  if(msize>=0)  h->SetMarkerSize(msize);
+  if(lcolor>=0) h->SetLineColor(lcolor);
+  if(lstyle>=0) h->SetLineStyle(lstyle);
+  if(lwidth>=0) h->SetLineWidth(lwidth);
+  if(fcolor>=0) h->SetFillColor(fcolor);
+  if(falpha>=0) h->SetFillColorAlpha(fcolor, falpha);
+  if(fstyle>=0) h->SetFillStyle(fstyle);
+}
+#endif
 
 #endif

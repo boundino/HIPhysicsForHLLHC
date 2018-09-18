@@ -5,13 +5,13 @@ void drawTheory()
 {
   // RAA
   drawTheoryRAA::drawcanvas();
-  drawTheoryRAA::drawTheory010();
+  drawTheoryRAA::setupNdrawTheory010();
   drawTheoryRAA::drawlegends();
   drawTheoryRAA::canvasRAA->SaveAs("plots/cRAA_theorycurves.pdf");
 
   // V2
   drawTheoryV2::drawcanvas();
-  drawTheoryV2::drawTheory3050();
+  drawTheoryV2::setupNdrawTheory3050();
   drawTheoryV2::drawlegends();
   drawTheoryV2::canvasV2->SaveAs("plots/cV2_theorycurves.pdf");
 }

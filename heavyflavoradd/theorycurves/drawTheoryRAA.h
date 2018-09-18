@@ -1,3 +1,6 @@
+#ifndef _DRAWTHEORY_RAA_H_
+#define _DRAWTHEORY_RAA_H_
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -19,6 +22,7 @@ namespace xjjroot
 {
   void drawtex(Double_t x, Double_t y, const char *text, Float_t tsize=0.04, Short_t align=12, Style_t font=42);
   void drawline(Double_t x1, Double_t y1, Double_t x2, Double_t y2, Color_t lcolor=kBlack, Style_t lstyle=1, Width_t lwidth=2);
+  template <class T> void setthgrstyle(T* h, Color_t mcolor=-1, Style_t mstyle=-1, Size_t msize=-1, Color_t lcolor=-1, Style_t lstyle=-1, Width_t lwidth=-1, Color_t fcolor=-1, Float_t falpha=-1, Style_t fstyle=-1);
 }
 #endif
 
@@ -48,164 +52,78 @@ namespace drawTheoryRAA
 
   TGraphErrors* fillgadscft(TString datfile);
   TGraph* fillalicecurve(TString datfile);
-
-  //
-  void drawTheory0100()
+      
+  void setupTheory010()
   {
-    gStyle->SetHatchesLineWidth(3);
-
-    // CUJET
-    TFile* infCUJETD5TeV = new TFile("TheoryPredictions/CUJET_D0_RAA_0_100.root");
-    gCUJETD5TeV = (TGraphAsymmErrors*)infCUJETD5TeV->Get("gRAADmeson5TeV");
-    gCUJETD5TeV->SetLineWidth(1);
-    gCUJETD5TeV->SetLineColor(0);
-    gCUJETD5TeV->SetFillColor(kAzure-1);
-    gCUJETD5TeV->SetFillColorAlpha(kAzure-2,0.6);
-    gCUJETD5TeV->SetFillStyle(3481);
-    // Shanshan
-    gShanshanD5TeV = new TGraph("TheoryPredictions/Shanshan-D-RAA_PbPb5020_00-80.dat");
-    gShanshanD5TeV->SetLineWidth(4);
-    gShanshanD5TeV->SetLineColor(kRed+1);
-    // Magdalena
-    gMagdalenaD5TeV = new TGraphErrors("TheoryPredictions/Magdalena-5TeV-0100-plot2.txt");
-    gMagdalenaD5TeV->SetLineWidth(4);
-    gMagdalenaD5TeV->SetLineColor(kRed-7);
-    gMagdalenaD5TeV->SetFillColor(kRed-4);
-    gMagdalenaD5TeV->SetFillColorAlpha(kRed-4,0.5);
-    gMagdalenaD5TeV->SetFillStyle(3344);
-    // ADSCFT 1
-    gADSCFT1D5TeV = fillgadscft("TheoryPredictions/RAA_5TeV_0080_D0_DiffusionConstant_band.dat");
-    gADSCFT1D5TeV->SetName("gADSCFT1D5TeV");
-    gADSCFT1D5TeV->SetLineColor(0);
-    gADSCFT1D5TeV->SetFillColor(kOrange+1);
-    gADSCFT1D5TeV->SetFillColorAlpha(kOrange+1,0.6);
-    gADSCFT1D5TeV->SetFillStyle(3325);
-    // ADSCFT 2
-    gADSCFT2D5TeV = fillgadscft("TheoryPredictions/RAA_5TeV_0080_D0_DiffusionDynamic_band.dat");
-    gADSCFT2D5TeV->SetName("gADSCFT2D5TeV");
-    gADSCFT2D5TeV->SetLineColor(0);
-    gADSCFT2D5TeV->SetFillColor(kPink-9);
-    gADSCFT2D5TeV->SetFillColorAlpha(kPink-9,0.6);
-    gADSCFT2D5TeV->SetFillStyle(3352);
-
-    //
-    gADSCFT1D5TeV->Draw("4 same");
-    gMagdalenaD5TeV->Draw("f same");
-    gMagdalenaD5TeV->Draw("l same");
-    gCUJETD5TeV->Draw("3 same");
-    gShanshanD5TeV->Draw("c same");
-    gADSCFT2D5TeV->Draw("4 same");
-  }
-
-  void drawTheory010()
-  {
-    gStyle->SetHatchesLineWidth(2);
-
     // CUJET
     TFile* infCUJETD5TeV = new TFile("TheoryPredictions/CUJET_D0_RAA_0_10.root");
     gCUJETD5TeV = (TGraphAsymmErrors*)infCUJETD5TeV->Get("gRAADmeson5TeV");
-    gCUJETD5TeV->SetLineWidth(1);
-    gCUJETD5TeV->SetLineColor(0);
-    gCUJETD5TeV->SetFillColor(kAzure-1);
-    gCUJETD5TeV->SetFillColorAlpha(kAzure-2,0.6);
-    gCUJETD5TeV->SetFillStyle(3481);
+    xjjroot::setthgrstyle(gCUJETD5TeV, -1, -1, -1, 0, 0, 0, kAzure-2, 0.6, 3481);
     std::cout<<"--- Read... gCUJETD5TeV"<<std::endl;
     // Shanshan
     gShanshanD5TeV = new TGraph("TheoryPredictions/Shanshan-D-RAA_PbPb5020_00-10.dat");
-    gShanshanD5TeV->SetLineWidth(4);
-    gShanshanD5TeV->SetLineColor(kRed+1);
+    xjjroot::setthgrstyle(gShanshanD5TeV, -1, -1, -1, kRed+1, 1, 4);
     std::cout<<"--- Read... gShanshanD5TeV"<<std::endl;
     // Magdalena
     gMagdalenaD5TeV = new TGraphErrors("TheoryPredictions/Magdalena-5TeV-plot2.txt");
-    gMagdalenaD5TeV->SetLineWidth(2);
-    gMagdalenaD5TeV->SetLineColor(kRed-7);
-    gMagdalenaD5TeV->SetFillColor(kRed-4);
-    gMagdalenaD5TeV->SetFillColorAlpha(kRed-4,0.5);
-    gMagdalenaD5TeV->SetFillStyle(3344);
+    xjjroot::setthgrstyle(gMagdalenaD5TeV, -1, -1, -1, kRed-7, 1, 2, kRed-4, 0.5, 3344);
     std::cout<<"--- Read... gMagdalenaD5TeV"<<std::endl;
     // PHSD w/o shadowing
     gPHSDWOShadowing = new TGraphErrors("TheoryPredictions/phsd502TeVWoShadowing.txt");
-    gPHSDWOShadowing->SetLineColor(kAzure-6);
-    gPHSDWOShadowing->SetLineWidth(4);
-    gPHSDWOShadowing->SetLineStyle(2);
+    xjjroot::setthgrstyle(gPHSDWOShadowing, -1, -1, -1, kAzure-6, 2, 4);
     std::cout<<"--- Read... gPHSDWOShadowing"<<std::endl;
     // PHSD w/ shadowing
     gPHSDWShadowing = new TGraphErrors("TheoryPredictions/phsd502TeVWShadowing.txt");
-    gPHSDWShadowing->SetLineColor(kAzure-6);
-    gPHSDWShadowing->SetLineWidth(4);
-    gPHSDWShadowing->SetLineStyle(1);
+    xjjroot::setthgrstyle(gPHSDWShadowing, -1, -1, -1, kAzure-6, 1, 4);
     std::cout<<"--- Read... gPHSDWShadowing"<<std::endl;
     // Ivan 
-    //gIvanD5TeV = new TGraph("TheoryPredictions/R-PbPb_cen_cron1.5_eloss1.5.5100GeVD0.txt");
     gIvanD5TeV = new TGraph("TheoryPredictions/D0cmsCENTPbPb.txt");
-    gIvanD5TeV->SetLineColor(kViolet+1);
-    gIvanD5TeV->SetFillColor(kViolet+1);
-    gIvanD5TeV->SetFillColorAlpha(kViolet+1,0.5);
-    gIvanD5TeV->SetFillStyle(3358);
-    gIvanD5TeV->SetLineWidth(2);
+    xjjroot::setthgrstyle(gIvanD5TeV, -1, -1, -1, kViolet+1, 1, 2, kViolet+1, 0.5, 3358);
     std::cout<<"--- Read... gIvanD5TeV"<<std::endl;
     // ADSCFT 1
     gADSCFT1D5TeV = fillgadscft("TheoryPredictions/RAA_5TeV_0010_D0_DiffusionConstant_band.dat");
     gADSCFT1D5TeV->SetName("gADSCFT1D5TeV");
-    gADSCFT1D5TeV->SetLineColor(0);
-    gADSCFT1D5TeV->SetFillColor(kOrange+1);
-    gADSCFT1D5TeV->SetFillColorAlpha(kOrange+1,0.6);
-    gADSCFT1D5TeV->SetFillStyle(3325);
+    xjjroot::setthgrstyle(gADSCFT1D5TeV, -1, -1, -1, 0, 0 ,0, kOrange+1, 0.6, 3325);
     std::cout<<"--- Read... gADSCFT1D5TeV"<<std::endl;
     // ADSCFT 2
     gADSCFT2D5TeV = fillgadscft("TheoryPredictions/RAA_5TeV_0010_D0_DiffusionDynamic_band.dat");
     gADSCFT2D5TeV->SetName("gADSCFT2D5TeV");
-    gADSCFT2D5TeV->SetLineColor(0);
-    gADSCFT2D5TeV->SetFillColor(kPink-9);
-    gADSCFT2D5TeV->SetFillColorAlpha(kPink-9,0.6);
-    gADSCFT2D5TeV->SetFillStyle(3352);
+    xjjroot::setthgrstyle(gADSCFT2D5TeV, -1, -1, -1, 0, 0, 0, kPink-9, 0.6, 3352);
     std::cout<<"--- Read... gADSCFT2D5TeV"<<std::endl;
     // BAMPS
     gBAMPSlow = fillalicecurve("TheoryPredictions/RAA_BAMPS_low.dat");
-    gBAMPSlow->SetLineStyle(3);
-    gBAMPSlow->SetLineColor(kGreen+4);
-    gBAMPSlow->SetLineWidth(4);
+    xjjroot::setthgrstyle(gBAMPSlow, -1, -1, -1, kGreen+4, 3, 4);
     gBAMPShigh = fillalicecurve("TheoryPredictions/RAA_BAMPS_high.dat");
-    gBAMPShigh->SetLineStyle(3);
-    gBAMPShigh->SetLineColor(kGreen+4);
-    gBAMPShigh->SetLineWidth(4);
+    xjjroot::setthgrstyle(gBAMPShigh, -1, -1, -1, kGreen+4, 3, 4);
     std::cout<<"--- Read... gBAMPS"<<std::endl;
     // BAMPSrad
     gBAMPSradlow = fillalicecurve("TheoryPredictions/RAA_BAMPSrad_low.dat");
-    gBAMPSradlow->SetLineStyle(3);
-    gBAMPSradlow->SetLineColor(kSpring+5);
-    gBAMPSradlow->SetLineWidth(4);
+    xjjroot::setthgrstyle(gBAMPSradlow, -1, -1, -1, kSpring+5, 3, 4);
     gBAMPSradhigh = fillalicecurve("TheoryPredictions/RAA_BAMPSrad_high.dat");
-    gBAMPSradhigh->SetLineStyle(3);
-    gBAMPSradhigh->SetLineColor(kSpring+5);
-    gBAMPSradhigh->SetLineWidth(4);
+    xjjroot::setthgrstyle(gBAMPSradhigh, -1, -1, -1, kSpring+5, 3, 4);
     std::cout<<"--- Read... gBAMPSrad"<<std::endl;
     // EPOS
     gEPOSlow = fillalicecurve("TheoryPredictions/RAA_EPOS_low.dat");
-    gEPOSlow->SetLineStyle(4);
-    gEPOSlow->SetLineColor(kAzure+5);
-    gEPOSlow->SetLineWidth(4);
+    xjjroot::setthgrstyle(gEPOSlow, -1, -1, -1, kAzure+5, 4, 4);
     gEPOShigh = fillalicecurve("TheoryPredictions/RAA_EPOS_high.dat");
-    gEPOShigh->SetLineStyle(4);
-    gEPOShigh->SetLineColor(kAzure+5);
-    gEPOShigh->SetLineWidth(4);
+    xjjroot::setthgrstyle(gEPOShigh, -1, -1, -1, kAzure+5, 4, 4);
     std::cout<<"--- Read... gEPOS"<<std::endl;
     // TAMU
     gTAMUlow = fillalicecurve("TheoryPredictions/RAA_TAMU_low.dat");
-    gTAMUlow->SetLineStyle(2);
-    gTAMUlow->SetLineColor(kOrange+7);
-    gTAMUlow->SetLineWidth(4);
+    xjjroot::setthgrstyle(gTAMUlow, -1, -1, -1, kOrange+7, 2, 4);
     gTAMUhigh = fillalicecurve("TheoryPredictions/RAA_TAMU_high.dat");
-    gTAMUhigh->SetLineStyle(2);
-    gTAMUhigh->SetLineColor(kOrange+7);
-    gTAMUhigh->SetLineWidth(4);
+    xjjroot::setthgrstyle(gTAMUhigh, -1, -1, -1, kOrange+7, 2, 4);
     std::cout<<"--- Read... gTAMU"<<std::endl;
     // POWLANG
     gPOWLANG = fillalicecurve("TheoryPredictions/RAA_POWLANG.dat");
-    gPOWLANG->SetLineStyle(10);
-    gPOWLANG->SetLineColor(kMagenta-7);
-    gPOWLANG->SetLineWidth(4);
+    xjjroot::setthgrstyle(gPOWLANG, -1, -1, -1, kMagenta-7, 10, 4);
     std::cout<<"--- Read... gPOWLANG"<<std::endl;
+  }
+
+  //
+  void drawTheory010()
+  {
+    gStyle->SetHatchesLineWidth(2);
 
     gMagdalenaD5TeV->Draw("f same");
     gMagdalenaD5TeV->Draw("l same");
@@ -229,6 +147,10 @@ namespace drawTheoryRAA
     gPOWLANG->Draw("l same");
   }
 
+  //
+  void setupNdrawTheory010() { setupTheory010(); drawTheory010(); }
+
+  //
   TGraphErrors* fillgadscft(TString datfile)
   {
     const int n = 1000;
@@ -381,5 +303,21 @@ void xjjroot::drawline(Double_t x1, Double_t y1, Double_t x2, Double_t y2, Color
   l->SetLineWidth(lwidth);
   l->Draw();
 }
+
+template <class T>
+void xjjroot::setthgrstyle(T* h, Color_t mcolor/*=-1*/, Style_t mstyle/*=-1*/, Size_t msize/*=-1*/, Color_t lcolor/*=-1*/, Style_t lstyle/*=-1*/, Width_t lwidth/*=-1*/, Color_t fcolor/*=-1*/, Float_t falpha/*=-1*/, Style_t fstyle/*=-1*/)
+{
+  if(mcolor>=0) h->SetMarkerColor(mcolor);
+  if(mstyle>=0) h->SetMarkerStyle(mstyle);
+  if(msize>=0)  h->SetMarkerSize(msize);
+  if(lcolor>=0) h->SetLineColor(lcolor);
+  if(lstyle>=0) h->SetLineStyle(lstyle);
+  if(lwidth>=0) h->SetLineWidth(lwidth);
+  if(fcolor>=0) h->SetFillColor(fcolor);
+  if(falpha>=0) h->SetFillColorAlpha(fcolor, falpha);
+  if(fstyle>=0) h->SetFillStyle(fstyle);
+}
+
+#endif
 
 #endif
