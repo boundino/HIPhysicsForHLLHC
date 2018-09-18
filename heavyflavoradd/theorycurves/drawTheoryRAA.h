@@ -153,36 +153,29 @@ namespace drawTheoryRAA
   //
   TGraphErrors* fillgadscft(TString datfile)
   {
-    const int n = 1000;
-    Float_t bCx[n],bCy[n],bCye[n],bDummy[n];
-    Int_t nbin=0;
+    std::vector<float> bCx, bCy, bCxe, bCye;
     std::ifstream getadscft(datfile);
-    if(!getadscft.is_open()) std::cout<<"Opening the file fails: ADS/CFT DiffusionConstant"<<std::endl;
-    nbin=0;
-    while(!getadscft.eof())
+    while(true)
       {
-        getadscft>>bCx[nbin]>>bCy[nbin]>>bDummy[nbin]>>bCye[nbin];
-        nbin++;
+        float bx, by, bye, dum, temp;
+        getadscft>>temp;
+        if(getadscft.eof()) { break; }
+        bx = temp; getadscft>>by>>dum>>bye; 
+        bCx.push_back(bx);
+        bCy.push_back(by);
+        bCxe.push_back(0);
+        bCye.push_back(bye);
       }
-    bCx[nbin] = bCx[nbin-1];
-    bCy[nbin] = bCy[nbin-1];
-    bCye[nbin] = bCye[nbin-1];
-    nbin++;
-    Float_t* aADSCFTD5TeVx = new Float_t[nbin];
-    Float_t* aADSCFTD5TeVxe = new Float_t[nbin];
-    Float_t* aADSCFTD5TeVy = new Float_t[nbin];
-    Float_t* aADSCFTD5TeVye = new Float_t[nbin];
-    for(int i=0;i<nbin;i++)
-      {
-        aADSCFTD5TeVx[i] = bCx[i];
-        aADSCFTD5TeVxe[i] = 0;
-        aADSCFTD5TeVy[i] = bCy[i];
-        aADSCFTD5TeVye[i] = bCye[i];
-      }
+    bCx.push_back(bCx[bCx.size()-1]);
+    bCy.push_back(bCy[bCy.size()-1]);
+    bCxe.push_back(0);
+    bCye.push_back(bCye[bCye.size()-1]);
+
     getadscft.close();
     getadscft.clear();
 
-    TGraphErrors* gadscft = new TGraphErrors(nbin, aADSCFTD5TeVx, aADSCFTD5TeVy, aADSCFTD5TeVxe, aADSCFTD5TeVye);
+    TGraphErrors* gadscft = new TGraphErrors(bCx.size(), bCx.data(), bCy.data(), bCxe.data(), bCye.data());
+    gadscft->SetName(Form("gr_%s", datfile.Data()));
     return gadscft;
   }
 
@@ -199,6 +192,9 @@ namespace drawTheoryRAA
         vx.push_back(x);
         vy.push_back(y);
       }
+    getdata.close();
+    getdata.clear();
+
     int nx = vx.size();
     TGraph* gr = new TGraph(nx, vx.data(), vy.data());
     gr->SetName(Form("gr_%s", datfile.Data()));
