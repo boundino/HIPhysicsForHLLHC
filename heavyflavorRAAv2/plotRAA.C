@@ -5,7 +5,8 @@
 
 Double_t errorD0lowpt = 0.30; // 30%
 Double_t errorsystD0lowpt = 0.137405/0.722896; // lowest pt bin
-Float_t trkerr = 0.04; //minimum tracking syst
+Float_t trkerr = 0.025; //minimum tracking syst (4% => 2.5%)
+Float_t muerr = 0.01; //mu TnP syst, 0.5%x2 
 
 void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_Bp_before, Float_t lumiTG_Charged_before, Float_t lumiMB_Charged_before, 
              Float_t lumiTG_after, Float_t lumiMB_after)
@@ -102,7 +103,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   for(int i=0;i<nxBp;i++)
     {
       Double_t centervalue,tem;
-      Float_t errminimum = trkerr*3;
+      // Float_t errminimum = trkerr*3;
+      Float_t errminimum = TMath::Sqrt(trkerr*trkerr+muerr*muerr);
       getBp_theory>>tem>>centervalue;
       hRAA_Bp_before->SetBinContent(i+1,centervalue);
       hRAA_Bp_after->SetBinContent(i+1,centervalue);
@@ -117,7 +119,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   for(int i=0;i<nxBp;i++)
     {
       Double_t centervalue,staterror,systerror,tem;
-      Float_t errminimum = trkerr*3;
+      // Float_t errminimum = trkerr*3;
+      Float_t errminimum = TMath::Sqrt(trkerr*trkerr+muerr*muerr);
       getBp_CMS>>tem>>tem>>tem>>centervalue>>staterror>>systerror>>tem;
       hRAA_Bp_before->SetBinError(i+1,ayBpbefore[i]*staterror/centervalue);
       hRAA_Bp_after->SetBinError(i+1,(ayBpafter[i]*staterror/centervalue)/lumiweightTG_Bp);
@@ -142,7 +145,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   for(int i=0;i<nxBs;i++)
     {
       Double_t centervalue,staterror,systerror,tem;
-      Float_t errminimum = trkerr*4;
+      // Float_t errminimum = trkerr*4;
+      Float_t errminimum = TMath::Sqrt(trkerr*2*trkerr*2+muerr*muerr);
       getBs>>tem>>tem>>tem>>centervalue>>staterror>>systerror;
       hRAA_Bs_before->SetBinContent(i+1,centervalue);
       hRAA_Bs_after->SetBinContent(i+1,centervalue);
@@ -173,7 +177,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   for(int i=0;i<nxNPJpsi;i++)
     {
       Double_t xerror,centervalue,centervalueafter,staterror,systerror,tem;
-      Float_t errminimum = trkerr*3;
+      Float_t errminimum = muerr;
       getNPJpsi_CMS>>tem>>xerror>>centervalue>>centervalueafter>>systerror>>staterror;
       exstatNPJpsi[i] = xerror;
       exsystNPJpsi[i] = axNPJpsi[i]*0.08;
@@ -181,8 +185,8 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
       ayNPJpsiafter[i] = centervalueafter;
       eystatNPJpsibefore[i] = staterror;
       eysystNPJpsibefore[i] = systerror;
-      eystatNPJpsiafter[i] = staterror/lumiweightTG_NPJpsi;
-      // eysystNPJpsiafter[i] = (systerror/lumiweightTG_NPJpsi)>(errminimum*ayNPJpsiafter[i])?(systerror/lumiweightTG_NPJpsi):(errminimum*ayNPJpsiafter[i]);
+      // eystatNPJpsiafter[i] = staterror/lumiweightTG_NPJpsi;
+      eysystNPJpsiafter[i] = (systerror/lumiweightTG_NPJpsi)>(errminimum*ayNPJpsiafter[i])?(systerror/lumiweightTG_NPJpsi):(errminimum*ayNPJpsiafter[i]);
       eysystNPJpsiafter[i] = systerror/lumiweightTG_NPJpsi;
     }
   getNPJpsi_CMS.close();
@@ -307,9 +311,12 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::settex(texpre, 0.05, 13, 52);
   TLatex* texpreafter = new TLatex(0.15, 0.84, "Projection");
   xjjroot::settex(texpreafter, 0.05, 13, 52);
-  TLatex* texdata = new TLatex(0.15, 0.78, "2015 Data");
-  xjjroot::settex(texdata, 0.05, 13);
-  TLatex* texsnn = new TLatex(0.13, 0.945, "#sqrt{s_{NN}} = 5.02 TeV");
+  // TLatex* texdata = new TLatex(0.15, 0.78, "2015 Data");
+  TLatex* texdata = new TLatex(0.15, 0.77, "2015 Data");
+  xjjroot::settex(texdata, 0.04, 13);
+  TLatex* texdata2 = new TLatex(0.15, 0.72, "Uncertainties");
+  xjjroot::settex(texdata2, 0.04, 13);
+  TLatex* texsnn = new TLatex(0.13, 0.955, "#lower[-0.2]{#sqrt{s_{NN}}} = 5.02 TeV");
   xjjroot::settex(texsnn, 0.038);
   TLatex* texlumi = new TLatex(0.965, 0.945, "pp 27.4 pb^{-1} + PbPb 0.4 nb^{-1}");
   xjjroot::settex(texlumi, 0.038, 31);
@@ -317,7 +324,9 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   xjjroot::settex(texlumibonly, 0.038, 31);
   TLatex* texlumiv2 = new TLatex(0.965, 0.945, "pp 27.4 pb^{-1} + PbPb");
   xjjroot::settex(texlumiv2, 0.038, 31);
-  TLatex* texlumiafter = new TLatex(0.965, 0.945, "pp + PbPb");
+  TLatex* texlumiaftersep = new TLatex(0.965, 0.945, "pp 650 pb^{-1} + PbPb");
+  xjjroot::settex(texlumiaftersep, 0.038, 31);
+  TLatex* texlumiafter = new TLatex(0.965, 0.945, "pp 650 pb^{-1} + PbPb 10 nb^{-1}");
   xjjroot::settex(texlumiafter, 0.038, 31);
   TLatex* texcent = new TLatex(0.60, 0.18, Form("Centrality 0-100%s", "%"));
   xjjroot::settex(texcent, 0.043);
@@ -355,8 +364,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   // gRAA_Ds_before->Draw("5same");
   // hRAA_Ds_before->Draw("plsame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumi->Draw();
   texcent->Draw();
@@ -386,7 +397,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent->Draw();
   TLegend* legRAAafter = new TLegend(0.45, 0.60, 0.92, 0.92);
   xjjroot::setleg(legRAAafter, 0.035);
@@ -434,8 +445,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   // gRAA_Ds_before->Draw("5same");
   // hRAA_Ds_before->Draw("plsame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumi->Draw();
   texcent->Draw();
@@ -464,7 +477,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent->Draw();
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_right.pdf", lumiTG_after, lumiMB_after));
@@ -495,8 +508,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gRAA_NPJPsi_syst_before->Draw("2same");
   gRAA_NPJPsi_stat_before->Draw("psame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumiv2->Draw();
   texcent->Draw();
@@ -529,7 +544,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent->Draw();
   legRAAafter->Draw();
 
@@ -563,8 +578,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gRAA_NPJPsi_syst_before->Draw("2same");
   gRAA_NPJPsi_stat_before->Draw("psame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumiv2->Draw();
   texcent->Draw();
@@ -593,7 +610,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent->Draw();
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
@@ -619,8 +636,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gRAA_Bs_before->Draw("2same");
   hRAA_Bs_before->Draw("plsame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumibonly->Draw();
   texcent->Draw();
@@ -648,9 +667,12 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcent->Draw();
   TLegend* legBonlyafter = new TLegend(0.45, 0.71, 0.92, 0.91);
   xjjroot::setleg(legBonlyafter, 0.035);
-  legBonlyafter->AddEntry(gRAA_Bp_after, Form("B^{+}, %.0f nb^{-1}", lumiTG_after), "pf");
-  legBonlyafter->AddEntry(gRAA_NPJPsi_syst_after, Form("Non-prompt J/#psi, %.0f nb^{-1}", lumiTG_after), "pf");
-  legBonlyafter->AddEntry(gRAA_Bs_after, Form("B_{s}, %.0f nb^{-1}", lumiTG_after), "pf");
+  // legBonlyafter->AddEntry(gRAA_Bp_after, Form("B^{+}, %.0f nb^{-1}", lumiTG_after), "pf");
+  // legBonlyafter->AddEntry(gRAA_NPJPsi_syst_after, Form("Non-prompt J/#psi, %.0f nb^{-1}", lumiTG_after), "pf");
+  // legBonlyafter->AddEntry(gRAA_Bs_after, Form("B_{s}, %.0f nb^{-1}", lumiTG_after), "pf");
+  legBonlyafter->AddEntry(gRAA_Bp_after, "B^{+}", "pf");
+  legBonlyafter->AddEntry(gRAA_NPJPsi_syst_after, "Non-prompt J/#psi", "pf");
+  legBonlyafter->AddEntry(gRAA_Bs_after, "B_{s}", "pf");
   legBonlyafter->Draw();
 
   c2->SaveAs(Form("plots/cRAA_lumiTG_%.0f_lumiMB_%.0f_v1_bOnly.pdf", lumiTG_after, lumiMB_after));
@@ -666,8 +688,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   gRAA_Bs_before->Draw("2same");
   hRAA_Bs_before->Draw("plsame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumi->Draw();
   texcent->Draw();
@@ -704,8 +728,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   RAA_CMS_Charged_0_5::drawsystCharged(1., 1., trkerr);
   hRAA_Charged_before_cent010->Draw("plsame");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumiv2->Draw();
   texcent010->Draw();
@@ -725,7 +751,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent010->Draw();
   legRAAafter = new TLegend(0.45, 0.70, 0.92, 0.87);
   xjjroot::setleg(legRAAafter, 0.035);
@@ -752,8 +778,10 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   // std::cout<<"800 "<<f->Eval(800)<<std::endl;
   f->Draw("same");
   texcms->Draw();
-  texpre->Draw();
+  // texpre->Draw();
+  texpreafter->Draw();
   texdata->Draw();
+  texdata2->Draw();
   texsnn->Draw();
   texlumiv2->Draw();
   texcent010->Draw();
@@ -769,7 +797,7 @@ void plotRAA(Float_t lumiTG_D0_before, Float_t lumiMB_D0_before, Float_t lumiTG_
   texcms->Draw();
   texpreafter->Draw();
   texsnn->Draw();
-  texlumiafter->Draw();
+  texlumiaftersep->Draw();
   texcent010->Draw();
   legRAAafter->Draw();
   c1->SaveAs(Form("plots/cRAA_cent05_lumiTG_%.0f_lumiMB_%.0f_v2_right.pdf", lumiTG_after, lumiMB_after));
